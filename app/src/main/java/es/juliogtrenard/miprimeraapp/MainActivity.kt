@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnAddTask:Button
     private lateinit var etTask:EditText
     private lateinit var rvTask:RecyclerView
+    private var tasks = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addTask() {
         val taskToAdd:String = etTask.text.toString()
+        tasks.add(taskToAdd)
     }
 
     private fun initView() {
