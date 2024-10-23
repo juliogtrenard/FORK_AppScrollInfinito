@@ -25,8 +25,14 @@ class MainActivity : AppCompatActivity() {
     //Configura el RecyclerView para añadir el adapter
     private fun initRecyclerView() {
         rvTask.layoutManager = LinearLayoutManager(this) //LayoutManager controla como se van a ver las vistas
-        adapter = TaskAdapter(tasks)
+        adapter = TaskAdapter(tasks) { deleteTask(it) } //Cuando se pulsa la imagen se llama a la funcion para que la borre
         rvTask.adapter = adapter
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun deleteTask(position:Int) {
+        tasks.removeAt(position)
+        adapter.notifyDataSetChanged()
     }
 
     //Llama a los metodos que inicializan y controlan el evento

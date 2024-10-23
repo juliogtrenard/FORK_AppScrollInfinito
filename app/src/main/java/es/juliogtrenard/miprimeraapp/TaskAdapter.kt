@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 //Clase que recibe el listado de tareas y hereda de RecyclerView.Adapter recibiendo el ViewHolder creado
-class TaskAdapter(private val tasks:List<String>):RecyclerView.Adapter<TaskViewHolder>() {
+//Tambien recibe una funcion que toma un entero como argumento y no devuelve ningún valor (Unit es equivalente a void),
+//maneja la acción de marcar una tarea como completada
+class TaskAdapter(private val tasks:List<String>, private val onItemDone: (Int) -> Unit):RecyclerView.Adapter<TaskViewHolder>() {
     //Contiene la vista para un elemento en la lista
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         //LayoutInflater permite cargar xml para el diseño
@@ -23,7 +25,7 @@ class TaskAdapter(private val tasks:List<String>):RecyclerView.Adapter<TaskViewH
 
     //Actualiza la vista con los datos correspondientes a la posicion dada
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.render(tasks[position])
+        holder.render(tasks[position], onItemDone)
     }
 
 }
