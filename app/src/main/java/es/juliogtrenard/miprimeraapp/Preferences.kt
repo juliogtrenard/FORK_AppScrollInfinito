@@ -16,5 +16,5 @@ class Preferences(context: Context) {
     }
 
     //Recuperar la información
-    fun getTasks():List<String> = prefs.getStringSet(TASKS, emptySet<String>())?.toMutableList() ?: mutableListOf()
+    fun getTasks():MutableList<String> = prefs.getStringSet(TASKS, emptySet<String>())?.toMutableList() ?: mutableListOf()
 }

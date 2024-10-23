@@ -7,6 +7,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import es.juliogtrenard.miprimeraapp.TaskApplication.Companion.prefs
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnAddTask:Button
@@ -24,15 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     //Configura el RecyclerView para añadir el adapter
     private fun initRecyclerView() {
+        tasks = prefs.getTasks()
         rvTask.layoutManager = LinearLayoutManager(this) //LayoutManager controla como se van a ver las vistas
         adapter = TaskAdapter(tasks) { deleteTask(it) } //Cuando se pulsa la imagen se llama a la funcion para que la borre
         rvTask.adapter = adapter
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun deleteTask(position:Int) {
-        tasks.removeAt(position)
-        adapter.notifyDataSetChanged()
     }
 
     //Llama a los metodos que inicializan y controlan el evento
@@ -53,6 +49,14 @@ class MainActivity : AppCompatActivity() {
         tasks.add(taskToAdd)
         adapter.notifyDataSetChanged() //Notifica que se han añadido nuevos valores
         etTask.setText("")
+        prefs.saveTasks(tasks)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun deleteTask(position:Int) {
+        tasks.removeAt(position)
+        adapter.notifyDataSetChanged()
+        prefs.saveTasks(tasks)
     }
 
     //Inicializar las variables buscando por su id
