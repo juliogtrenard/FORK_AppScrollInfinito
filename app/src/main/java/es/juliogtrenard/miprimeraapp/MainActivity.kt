@@ -18,20 +18,24 @@ class MainActivity : AppCompatActivity() {
         initUI()
     }
 
+    //Llama a los metodos que inicializan y controlan el evento
     private fun initUI() {
         initView()
         initListeners()
     }
 
+    //Añade una tarea cuando ocurre el evento click en el boton
     private fun initListeners() {
         btnAddTask.setOnClickListener {addTask()}
     }
 
+    //Añade una tarea
     private fun addTask() {
         val taskToAdd:String = etTask.text.toString()
         tasks.add(taskToAdd)
     }
 
+    //Inicializar las variables buscando por su id
     private fun initView() {
         btnAddTask = findViewById(R.id.btnAddTask)
         etTask = findViewById(R.id.etTask)
