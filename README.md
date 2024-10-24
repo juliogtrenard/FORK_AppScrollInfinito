@@ -5,6 +5,8 @@ AppScrollInfinito
 ## Descripción
 
 Aplicación para guardar tareas desarrollada con Kotlin en Android Studio. Permite agregar tareas y luego borrarlas una vez realizadas.
+Creada siguiendo el tutorial de 'Crea tu primera app en Android'
+https://openwebinars.net/academia/aprende/primera-app-android/
 
 ## Primeros pasos
 
