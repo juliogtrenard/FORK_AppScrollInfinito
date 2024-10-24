@@ -25,7 +25,7 @@ class TaskAdapter(private val tasks:List<String>, private val onItemDone: (Int) 
 
     //Actualiza la vista con los datos correspondientes a la posicion dada
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.render(tasks[position], onItemDone)
+        holder.render(tasks[position], onItemDone, holder.itemView.context)
     }
 
 }

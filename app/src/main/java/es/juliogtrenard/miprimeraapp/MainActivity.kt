@@ -1,6 +1,7 @@
 package es.juliogtrenard.miprimeraapp
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -50,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged() //Notifica que se han añadido nuevos valores
         etTask.setText("")
         prefs.saveTasks(tasks)
+
+        val mediaPlayerAddSound = MediaPlayer.create(this, R.raw.add_task)
+        mediaPlayerAddSound.start()
     }
 
     @SuppressLint("NotifyDataSetChanged")
