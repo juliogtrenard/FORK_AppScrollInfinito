@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.juliogtrenard.miprimeraapp.TaskApplication.Companion.prefs
@@ -50,12 +51,15 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Configura el RecyclerView y añade el adaptador.
+     * Además, añade funcionalidad de deslizar para eliminar una tarea.
      */
     private fun initRecyclerView() {
         tasks = prefs.getTasks()
         rvTask.layoutManager = LinearLayoutManager(this) // LayoutManager controla como se van a ver las vistas
         adapter = TaskAdapter(tasks) { deleteTask(it) } // Cuando se pulsa la imagen se llama a la funcion para que la borre
         rvTask.adapter = adapter
+
+        deslizarParaEliminar()
     }
 
     /**
@@ -109,5 +113,21 @@ class MainActivity : AppCompatActivity() {
         btnAddTask = findViewById(R.id.btnAddTask)
         etTask = findViewById(R.id.etTask)
         rvTask = findViewById(R.id.rvTask)
+    }
+
+    /**
+     * Permite eliminar una tarea deslizando hacia la izquierda o derecha de la pantalla.
+     */
+    private fun deslizarParaEliminar() {
+        // Configuración de Swipe to Delete para eliminar tareas al deslizar
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                deleteTask(viewHolder.adapterPosition) // Llama al método para eliminar la tarea en la posición desliz
+            }
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvTask) // Asigna el helper al RecyclerView
     }
 }
