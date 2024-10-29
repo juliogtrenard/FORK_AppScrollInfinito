@@ -84,13 +84,18 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("NotifyDataSetChanged")
     private fun addTask() {
         val taskToAdd:String = etTask.text.toString()
-        tasks.add(taskToAdd)
-        adapter.notifyDataSetChanged() //Notifica que se han añadido nuevos valores
-        etTask.setText("")
-        prefs.saveTasks(tasks)
 
-        val mediaPlayerAddSound = MediaPlayer.create(this, R.raw.add_task)
-        mediaPlayerAddSound.start()
+        if(taskToAdd.isEmpty()) {
+            etTask.error = "Escribe una tarea!"
+        } else {
+            tasks.add(taskToAdd)
+            adapter.notifyDataSetChanged() //Notifica que se han añadido nuevos valores
+            etTask.setText("")
+            prefs.saveTasks(tasks)
+
+            val mediaPlayerAddSound = MediaPlayer.create(this, R.raw.add_task)
+            mediaPlayerAddSound.start()
+        }
     }
 
     /**
