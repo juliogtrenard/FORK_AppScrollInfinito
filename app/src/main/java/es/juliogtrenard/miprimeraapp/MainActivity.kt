@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import es.juliogtrenard.miprimeraapp.TaskApplication.Companion.prefs
 
 /**
  * Actividad principal de la aplicación que gestiona la lista de tareas.
@@ -35,11 +34,16 @@ class MainActivity : AppCompatActivity() {
     /**
      * Lista mutable que contiene las tareas actuales.
      */
-    private var tasks = mutableListOf<String>()
+    private var tasks = mutableListOf<Task>()
     /**
      * Adaptador que gestiona la visualización de las tareas en el RecyclerView.
      */
     private lateinit var adapter:TaskAdapter
+
+    /**
+     * Gestiona la base de datos de tareas.
+     */
+    private lateinit var taskBDHelper: DatabaseHelper
 
     /**
      * Método que se llama al crear la actividad.
@@ -50,6 +54,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        taskBDHelper = DatabaseHelper(this)
+
         initUI()
         initRecyclerView()
     }
@@ -59,7 +66,7 @@ class MainActivity : AppCompatActivity() {
      * Además, añade funcionalidad de deslizar para eliminar una tarea.
      */
     private fun initRecyclerView() {
-        tasks = prefs.getTasks()
+        tasks = taskBDHelper.getAllTasks().toMutableList() // Obtener tareas de SQLite
         rvTask.layoutManager = LinearLayoutManager(this) // LayoutManager controla como se van a ver las vistas
         adapter = TaskAdapter(tasks) { deleteTask(it) } // Cuando se pulsa la imagen se llama a la funcion para que la borre
         rvTask.adapter = adapter
@@ -90,15 +97,17 @@ class MainActivity : AppCompatActivity() {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun addTask() {
-        val taskToAdd:String = etTask.text.toString()
+        val tareaTitulo:String = etTask.text.toString()
 
-        if(taskToAdd.isEmpty()) {
+        if(tareaTitulo.isEmpty()) {
             etTask.error = "Escribe una tarea!"
         } else {
-            tasks.add(taskToAdd)
+            // Crear un nuevo objeto Task y lo agrega a la base de datos
+            val newTask = Task(0, tareaTitulo, "")
+            taskBDHelper.insertNota(newTask)
+            tasks.add(newTask)
             adapter.notifyDataSetChanged() //Notifica que se han añadido nuevos valores
             etTask.setText("")
-            prefs.saveTasks(tasks)
             updateNoTasksVisibility()
 
             val mediaPlayerAddSound = MediaPlayer.create(this, R.raw.add_task)
@@ -116,7 +125,8 @@ class MainActivity : AppCompatActivity() {
     private fun deleteTask(position:Int) {
         tasks.removeAt(position)
         adapter.notifyDataSetChanged()
-        prefs.saveTasks(tasks)
+        val taskToDelete = tasks[position]
+        taskBDHelper.deleteTarea(taskToDelete.id) // Eliminar de SQLite
 
         updateNoTasksVisibility()
     }

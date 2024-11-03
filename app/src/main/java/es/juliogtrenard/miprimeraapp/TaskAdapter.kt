@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @param onItemDone Función que se ejecuta cuando se marca una tarea como completada,
  *                   recibiendo la posición de la tarea como parámetro.
  */
-class TaskAdapter(private val tasks:List<String>, private val onItemDone: (Int) -> Unit):RecyclerView.Adapter<TaskViewHolder>() {
+class TaskAdapter(private val tasks:MutableList<Task>, private val onItemDone: (Int) -> Unit):RecyclerView.Adapter<TaskViewHolder>() {
     /**
      * Contiene la vista para un elemento en la lista.
      *
@@ -46,7 +46,7 @@ class TaskAdapter(private val tasks:List<String>, private val onItemDone: (Int) 
      * @param position La posición del elemento en la lista de tareas.
      */
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.render(tasks[position], onItemDone, holder.itemView.context)
+        holder.render(tasks[position].getTitle(), onItemDone, holder.itemView.context)
     }
 
 }
