@@ -3,4 +3,5 @@
     <string name="aniadir_tarea">Añadir tarea</string>
     <string name="escribe_tu_tarea">Escribe tu tarea</string>
     <string name="imagen_check">Imagen check</string>
+    <string name="imagen_sin_tareas">Imagen sin tareas</string>
 </resources>

@@ -3,8 +3,10 @@ package es.juliogtrenard.miprimeraapp
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,9 @@ import es.juliogtrenard.miprimeraapp.TaskApplication.Companion.prefs
  * Actividad principal de la aplicación que gestiona la lista de tareas.
  */
 class MainActivity : AppCompatActivity() {
+    /** Muestra una imagen cuando no hay tareas */
+    private lateinit var imageViewNoTasks: ImageView
+
     /**
      * Botón que permite añadir una nueva tarea a la lista.
      */
@@ -59,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         adapter = TaskAdapter(tasks) { deleteTask(it) } // Cuando se pulsa la imagen se llama a la funcion para que la borre
         rvTask.adapter = adapter
 
+        updateNoTasksVisibility()
+
         deslizarParaEliminar()
     }
 
@@ -92,6 +99,7 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged() //Notifica que se han añadido nuevos valores
             etTask.setText("")
             prefs.saveTasks(tasks)
+            updateNoTasksVisibility()
 
             val mediaPlayerAddSound = MediaPlayer.create(this, R.raw.add_task)
             mediaPlayerAddSound.start()
@@ -109,6 +117,8 @@ class MainActivity : AppCompatActivity() {
         tasks.removeAt(position)
         adapter.notifyDataSetChanged()
         prefs.saveTasks(tasks)
+
+        updateNoTasksVisibility()
     }
 
     /**
@@ -118,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         btnAddTask = findViewById(R.id.btnAddTask)
         etTask = findViewById(R.id.etTask)
         rvTask = findViewById(R.id.rvTask)
+        imageViewNoTasks = findViewById(R.id.imageViewNoTasks)
     }
 
     /**
@@ -134,5 +145,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rvTask) // Asigna el helper al RecyclerView
+    }
+
+    /**
+     * Actualiza la visibilidad de la vista de la lista de tareas y de la imagen
+     * que indica que no hay tareas disponibles. Si la lista de tareas está vacía,
+     * oculta el RecyclerView y muestra la imagen que indica que no hay tareas.
+     * Si hay tareas en la lista, muestra el RecyclerView y oculta la imagen.
+     */
+    private fun updateNoTasksVisibility() {
+        if (tasks.isEmpty()) {
+            rvTask.visibility = View.GONE
+            imageViewNoTasks.visibility = View.VISIBLE // Muestra la imagen
+        } else {
+            rvTask.visibility = View.VISIBLE
+            imageViewNoTasks.visibility = View.GONE // Oculta la imagen
+        }
     }
 }
