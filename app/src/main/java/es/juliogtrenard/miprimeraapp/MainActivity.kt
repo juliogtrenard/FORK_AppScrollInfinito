@@ -3,6 +3,7 @@ package es.juliogtrenard.miprimeraapp
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -122,13 +123,18 @@ class MainActivity : AppCompatActivity() {
      * @param position Posición de la tarea a eliminar.
      */
     @SuppressLint("NotifyDataSetChanged")
-    private fun deleteTask(position:Int) {
-        tasks.removeAt(position)
-        adapter.notifyDataSetChanged()
-        val taskToDelete = tasks[position]
-        taskBDHelper.deleteTarea(taskToDelete.id) // Eliminar de SQLite
+    private fun deleteTask(position: Int) {
+        if (tasks.isNotEmpty() && position >= 0 && position < tasks.size) {
+            val taskToDelete = tasks[position]
+            tasks.removeAt(position)
+            taskBDHelper.deleteTarea(taskToDelete.id) // Eliminar de SQLite
+            taskBDHelper.actualizarTareas(tasks) // Actualizar la lista de tareas en la base de datos
 
-        updateNoTasksVisibility()
+            adapter.notifyDataSetChanged()
+            updateNoTasksVisibility()
+        } else {
+            Log.e("MainActivity", "Error al eliminar tarea: posición inválida")
+        }
     }
 
     /**

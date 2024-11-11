@@ -138,4 +138,17 @@ class DatabaseHelper(context: Context):SQLiteOpenHelper(
         db.delete(TABLE_NAME,whereClauses,whereArgs)
         db.close()
     }
+
+    fun actualizarTareas(tareas: MutableList<Task>) {
+        val db = writableDatabase
+        db.execSQL("DELETE FROM tareas") // Eliminar todas las tareas de la base de datos
+        for (tarea in tareas) {
+            val values = ContentValues()
+            values.put("id", tarea.id)
+            values.put("titulo", tarea.titulo)
+            values.put("descripcion", tarea.descripcion)
+            db.insert("tareas", null, values)
+        }
+        db.close()
+    }
 }
